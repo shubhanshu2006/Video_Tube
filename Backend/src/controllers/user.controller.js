@@ -153,11 +153,13 @@ const registerUser = asyncHandler(async (req, res) => {
   await pendingUser.save({ validateBeforeSave: false });
 
   // Send verification email
-  await sendVerificationEmail(
+  sendVerificationEmail(
     pendingUser.email,
     pendingUser.fullName,
     verificationToken
-  );
+  ).catch((err) => {
+    console.error("Verification email failed:", err.message);
+  });
 
   // Final response
   return res
@@ -570,21 +572,14 @@ const removeFromWatchHistory = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Valid video ID is required");
   }
 
-  await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $pull: { watchHistory: videoId },
-    }
-  );
+  await User.findByIdAndUpdate(req.user._id, {
+    $pull: { watchHistory: videoId },
+  });
 
   return res
     .status(200)
     .json(
-      new ApiResponse(
-        200,
-        {},
-        "Video removed from watch history successfully"
-      )
+      new ApiResponse(200, {}, "Video removed from watch history successfully")
     );
 });
 
@@ -598,7 +593,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   try {
     // Find user to get their cloud resources
     const user = await User.findById(userId).session(session);
-    
+
     if (!user) {
       await session.abortTransaction();
       throw new ApiError(404, "User not found");
@@ -614,7 +609,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
     // Get all user's videos to delete from cloudinary
     const userVideos = await Video.find({ owner: userId }).session(session);
-    
+
     // Delete all video files and thumbnails from cloudinary
     for (const video of userVideos) {
       if (video.videoFile) {
@@ -646,12 +641,16 @@ const deleteUser = asyncHandler(async (req, res) => {
     }).session(session);
 
     // Delete all likes on user's content (videos, comments, tweets)
-    const userVideoIds = userVideos.map(video => video._id);
+    const userVideoIds = userVideos.map((video) => video._id);
     await Like.deleteMany({
       $or: [
         { video: { $in: userVideoIds } },
-        { comment: { $in: await Comment.find({ owner: userId }).distinct('_id') } },
-        { tweet: { $in: await Tweet.find({ owner: userId }).distinct('_id') } },
+        {
+          comment: {
+            $in: await Comment.find({ owner: userId }).distinct("_id"),
+          },
+        },
+        { tweet: { $in: await Tweet.find({ owner: userId }).distinct("_id") } },
       ],
     }).session(session);
 
@@ -665,7 +664,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
     // Commit the transaction
     await session.commitTransaction();
-    
+
     // Clear cookies
     const options = {
       httpOnly: true,
@@ -685,10 +684,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       );
   } catch (error) {
     await session.abortTransaction();
-    throw new ApiError(
-      500,
-      error?.message || "Failed to delete user account"
-    );
+    throw new ApiError(500, error?.message || "Failed to delete user account");
   } finally {
     session.endSession();
   }

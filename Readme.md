@@ -347,7 +347,7 @@ For support, email your-email@example.com or open an issue in the repository.
 
 ## Authors
 
-- Harsh Singh - Initial work
+- Shubhanshu Singh - Initial work
 
 ## Project Status
 

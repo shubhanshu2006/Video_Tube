@@ -153,13 +153,16 @@ const registerUser = asyncHandler(async (req, res) => {
   await pendingUser.save({ validateBeforeSave: false });
 
   // Send verification email
-  await sendVerificationEmail(
-    pendingUser.email,
-    pendingUser.fullName,
-    verificationToken
-  ).catch((err) => {
-    console.error("Verification email failed:", err.message);
-  });
+  try {
+    await sendVerificationEmail(
+      pendingUser.email,
+      pendingUser.fullName,
+      verificationToken
+    );
+  } catch (err) {
+    await PendingUser.deleteOne({ _id: pendingUser._id });
+    throw new ApiError(500, "Failed to send verification email");
+  }
 
   // Final response
   return res

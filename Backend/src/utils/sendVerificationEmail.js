@@ -1,7 +1,9 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
 
 dotenv.config();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const emailTemplate = (verificationUrl, fullName) => `
 <!DOCTYPE html>
@@ -273,18 +275,15 @@ const emailTemplate = (verificationUrl, fullName) => `
 export const sendVerificationEmail = async (email, fullName, token) => {
   const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  await transporter.sendMail({
-    from: `"Video Tube" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Verify your email address",
-    html: emailTemplate(verificationUrl, fullName),
-  });
+  try {
+    await resend.emails.send({
+      from: "Video Tube <onboarding@resend.dev>",
+      to: email,
+      subject: "Verify your email address",
+      html: emailTemplate(verificationUrl, fullName),
+    });
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    throw error;
+  }
 };

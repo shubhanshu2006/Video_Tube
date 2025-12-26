@@ -153,7 +153,7 @@ const registerUser = asyncHandler(async (req, res) => {
   await pendingUser.save({ validateBeforeSave: false });
 
   // Send verification email
-  sendVerificationEmail(
+  await sendVerificationEmail(
     pendingUser.email,
     pendingUser.fullName,
     verificationToken

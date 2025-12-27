@@ -41,21 +41,25 @@ const generateAccessAndRefereshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, username, password } = req.body;
 
-  //  Validate input
-  if (
-    [fullName, email, username, password].some((field) => field?.trim() === "")
-  ) {
-    throw new ApiError(400, "All fields are required");
+  const fieldErrors = {};
+
+  if (!fullName?.trim()) fieldErrors.fullName = "Full name is required";
+  if (!email?.trim()) fieldErrors.email = "Email is required";
+  if (!username?.trim()) fieldErrors.username = "Username is required";
+  if (!password?.trim()) fieldErrors.password = "Password is required";
+
+  if (Object.keys(fieldErrors).length > 0) {
+    throw new ApiError(400, "Validation failed", fieldErrors);
   }
 
-  // Email format validation
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(email)) {
-    throw new ApiError(400, "Please enter a valid email address");
+    throw new ApiError(400, "Validation failed", {
+      email: "Please enter a valid email address",
+    });
   }
 
-  // Disposable email block
   const blockedDomains = [
     "mailinator.com",
     "10minutemail.com",
@@ -66,68 +70,69 @@ const registerUser = asyncHandler(async (req, res) => {
   const emailDomain = email.split("@")[1]?.toLowerCase();
 
   if (blockedDomains.includes(emailDomain)) {
-    throw new ApiError(400, "Disposable email addresses are not allowed");
+    throw new ApiError(400, "Validation failed", {
+      email: "Disposable email addresses are not allowed",
+    });
   }
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#_])[A-Za-z\d@$!%*?&#_]{8,}$/;
 
   if (!passwordRegex.test(password)) {
-    throw new ApiError(
-      400,
-      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"
-    );
+    throw new ApiError(400, "Validation failed", {
+      password:
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character",
+    });
   }
 
-  // Check REAL users
   const existedUser = await User.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ email }, { username }],
   });
 
   if (existedUser) {
-    throw new ApiError(409, "User already exists");
+    throw new ApiError(409, "Validation failed", {
+      email: "Email already registered",
+      username: "Username already taken",
+    });
   }
 
-  // Check pending users
   const existedPendingUser = await PendingUser.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ email }, { username }],
   });
 
   if (existedPendingUser) {
-    throw new ApiError(
-      409,
-      "Verification already sent. Please check your email."
-    );
+    throw new ApiError(409, "Validation failed", {
+      email: "Verification already sent. Please check your email.",
+    });
   }
 
-  // Handle files
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
-
   let coverImageLocalPath;
+
   if (req.files?.coverImage?.length > 0) {
     coverImageLocalPath = req.files.coverImage[0].path;
   }
 
   if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar file is required");
+    throw new ApiError(400, "Validation failed", {
+      avatar: "Avatar image is required",
+    });
   }
 
-  // Upload avatar
   let avatar;
   try {
     avatar = await uploadOnCloudinary(avatarLocalPath);
-  } catch (error) {
-    throw new ApiError(500, "Error while uploading avatar image");
+  } catch {
+    throw new ApiError(500, "Error uploading avatar image");
   }
 
-  // Upload cover image
   let coverImage;
   try {
     if (coverImageLocalPath) {
       coverImage = await uploadOnCloudinary(coverImageLocalPath);
     }
-  } catch (error) {
-    throw new ApiError(500, "Error while uploading cover image");
+  } catch {
+    throw new ApiError(500, "Error uploading cover image");
   }
 
   let pendingUser;
@@ -148,23 +153,20 @@ const registerUser = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  // Generate verification token
   const verificationToken = pendingUser.generateVerificationToken();
   await pendingUser.save({ validateBeforeSave: false });
 
-  // Send verification email
   try {
     await sendVerificationEmail(
       pendingUser.email,
       pendingUser.fullName,
       verificationToken
     );
-  } catch (err) {
+  } catch {
     await PendingUser.deleteOne({ _id: pendingUser._id });
     throw new ApiError(500, "Failed to send verification email");
   }
 
-  // Final response
   return res
     .status(201)
     .json(

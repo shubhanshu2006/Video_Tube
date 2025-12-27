@@ -19,10 +19,17 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFieldErrors((prev) => {
+      const copy = { ...prev };
+      delete copy[e.target.name];
+      return copy;
+    });
   };
 
   const handleFileChange = (
@@ -45,7 +52,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!avatar) {
-      toast.error("Please upload an avatar image");
+      setFieldErrors({ avatar: "Avatar image is required" });
       return;
     }
 
@@ -66,8 +73,24 @@ const Register = () => {
       setRegisteredEmail(formData.email);
       setShowSuccessModal(true);
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || "Registration failed");
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const err = error as {
+          response?: {
+            data?: {
+              message?: string;
+              errors?: Record<string, string>;
+            };
+          };
+        };
+
+        if (err.response?.data?.errors) {
+          setFieldErrors(err.response.data.errors);
+        } else {
+          toast.error(err.response?.data?.message || "Registration failed");
+        }
+      } else {
+        toast.error("Registration failed");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -183,6 +206,11 @@ const Register = () => {
                 className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="••••••••"
               />
+              {fieldErrors.password && (
+                <p className="mt-1 text-sm text-red-400">
+                  {fieldErrors.password}
+                </p>
+              )}
             </div>
           </div>
 
@@ -209,6 +237,11 @@ const Register = () => {
                     className="hidden"
                   />
                 </label>
+                {fieldErrors.avatar && (
+                  <p className="mt-1 text-sm text-red-400">
+                    {fieldErrors.avatar}
+                  </p>
+                )}
               </div>
             </div>
 

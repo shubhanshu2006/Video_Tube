@@ -8,20 +8,26 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
     try {
       console.log("Attempting login with email:", email);
       await login(email, password);
       console.log("Login successful, navigating to home");
       navigate("/");
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch (error: unknown) {
+      console.error("Login error - Full error object:", error);
+      const err = error as { response?: { data?: { message?: string } } };
+      console.log("Login error - response:", err.response);
+      console.log("Login error - message:", err.response?.data?.message);
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -42,6 +48,12 @@ const Login = () => {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg">
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
+
           <div className="space-y-4">
             <div>
               <label

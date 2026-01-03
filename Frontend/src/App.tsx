@@ -47,7 +47,6 @@ function AppRoutes() {
 
   return (
     <Routes>
-      {/* Public Routes */}
       <Route
         path="/login"
         element={isAuthenticated ? <Navigate to="/" /> : <Login />}
@@ -58,7 +57,6 @@ function AppRoutes() {
       />
       <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-      {/* Routes with Layout */}
       <Route element={<Layout />}>
         <Route
           path="/"
@@ -93,7 +91,6 @@ function AppRoutes() {
           }
         />
 
-        {/* Protected Routes */}
         <Route
           path="/upload"
           element={
@@ -184,8 +181,10 @@ function AppRoutes() {
         />
       </Route>
 
-      {/* 404 */}
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route
+        path="*"
+        element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />}
+      />
     </Routes>
   );
 }

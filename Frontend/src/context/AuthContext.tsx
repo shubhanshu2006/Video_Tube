@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = localStorage.getItem("accessToken");
       if (token) {
         const response = await authApi.getCurrentUser();
-        // Backend returns user data directly in response.data
+
         setUser(response.data);
       }
     } catch (error) {
@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await authApi.login(email, password);
       console.log("AuthContext: Login API response:", response);
 
-      // Backend returns data wrapped in ApiResponse format
       const userData = response.data.user;
       const accessToken = response.data.accessToken;
 
@@ -62,15 +61,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("accessToken", accessToken);
       toast.success("Login successful!");
     } catch (error: unknown) {
-      console.error("AuthContext: Login failed", error);
-      const err = error as { response?: { data?: { message?: string } } };
-      const errorMessage = err.response?.data?.message || "Login failed";
+      console.error("AuthContext: Login failed - Full error:", error);
+      const err = error as {
+        response?: { data?: { message?: string }; status?: number };
+      };
 
-      if (errorMessage.includes("User does not exist")) {
+      console.log("Error response:", err.response);
+      console.log("Error data:", err.response?.data);
+      console.log("Error message:", err.response?.data?.message);
+      console.log("Status code:", err.response?.status);
+
+      const errorMessage = err.response?.data?.message || "Login failed";
+      const statusCode = err.response?.status;
+
+      if (statusCode === 404 || errorMessage.includes("User does not exist")) {
         toast.error(
-          "Account not found. Please register or verify your email first."
+          "Account not found. Please check your email or register first."
         );
-      } else if (errorMessage.includes("verify your email")) {
+      } else if (
+        statusCode === 401 ||
+        errorMessage.includes("Invalid user credentials")
+      ) {
+        toast.error("Incorrect email or password. Please try again.");
+      } else if (
+        statusCode === 403 ||
+        errorMessage.includes("verify your email")
+      ) {
         toast.error(
           "Please verify your email before logging in. Check your inbox."
         );
@@ -97,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const refreshUser = async () => {
     try {
       const response = await authApi.getCurrentUser();
-      // Backend returns user data directly in response.data
+
       setUser(response.data);
     } catch (error) {
       console.error("Failed to refresh user:", error);

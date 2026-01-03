@@ -11,7 +11,6 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request interceptor for adding auth token
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -26,19 +25,37 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor for handling token refresh
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    console.error("API Error:", {
+    console.error("API Error (Axios Interceptor):", {
       url: error.config?.url,
       status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
       message: error.response?.data?.message,
     });
 
+    const authEndpoints = ["/login", "/register", "/verify-email"];
+    const isAuthEndpoint = authEndpoints.some((endpoint) =>
+      error.config?.url?.includes(endpoint)
+    );
+
+    if (isAuthEndpoint) {
+      console.log("Auth endpoint - not attempting token refresh");
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const hasToken = localStorage.getItem("accessToken");
+
+      if (!hasToken) {
+        console.log("No token found - redirecting to login");
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       try {

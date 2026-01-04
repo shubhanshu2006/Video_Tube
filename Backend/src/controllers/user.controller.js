@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { sendVerificationEmail } from "../utils/sendVerificationEmail.js";
+import { sendResetPasswordEmail } from "../utils/sendResetPasswordEmail.js";
 import { PendingUser } from "../models/pendingUser.model.js";
 import { Video } from "../models/video.model.js";
 import { Comment } from "../models/comment.model.js";
@@ -17,6 +18,8 @@ import { Like } from "../models/like.model.js";
 import { Tweet } from "../models/tweet.model.js";
 import { Playlist } from "../models/playlist.model.js";
 import { Subscription } from "../models/subscription.model.js";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 dotenv.config();
 
@@ -327,7 +330,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid old password");
   }
 
-  user.password = newPassword;
+  user.password = await bcrypt.hash(newPassword, 10);
   await user.save({ validateBeforeSave: false });
 
   return res
@@ -695,6 +698,117 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const fieldErrors = {};
+
+  if (!email?.trim()) {
+    fieldErrors.email = "Email is required";
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    throw new ApiError(400, "Validation failed", fieldErrors);
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) {
+    throw new ApiError(400, "Validation failed", {
+      email: "Please enter a valid email address",
+    });
+  }
+
+  const user = await User.findOne({ email });
+
+  
+  if (!user) {
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          null,
+          "If an account exists, a reset link has been sent"
+        )
+      );
+  }
+
+  const resetToken = user.generateResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  try {
+    await sendResetPasswordEmail(user.email, user.fullName, resetUrl);
+  } catch {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    throw new ApiError(500, "Failed to send reset password email");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        null,
+        "If an account exists, a reset link has been sent"
+      )
+    );
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  if (!token?.trim()) {
+    throw new ApiError(400, "Reset token is required");
+  }
+
+  const fieldErrors = {};
+
+  if (!password?.trim()) {
+    fieldErrors.password = "Password is required";
+  }
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#_])[A-Za-z\d@$!%*?&#_]{8,}$/;
+
+  if (password && !passwordRegex.test(password)) {
+    fieldErrors.password =
+      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character";
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    throw new ApiError(400, "Validation failed", fieldErrors);
+  }
+
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new ApiError(400, "Invalid or expired reset token");
+  }
+
+  user.password = await bcrypt.hash(password, 10);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpiry = undefined;
+  user.refreshToken = undefined; 
+
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Password reset successful"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -709,4 +823,6 @@ export {
   getWatchHistory,
   removeFromWatchHistory,
   deleteUser,
+  forgotPassword,
+  resetPassword,
 };

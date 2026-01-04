@@ -13,6 +13,8 @@ import {
   removeFromWatchHistory,
   updateAccountDetails,
   deleteUser,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -36,6 +38,9 @@ router.route("/register").post(
 
 router.route("/login").post(upload.none(), loginUser);
 router.route("/verify-email/:token").get(verifyEmail);
+router.route("/forgot-password").post(upload.none(), forgotPassword);
+router.route("/reset-password/:token").post(upload.none(), resetPassword);
+
 //secured routes
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);

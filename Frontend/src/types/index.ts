@@ -43,6 +43,7 @@ export interface Tweet {
   content: string;
   owner: User;
   likesCount?: number;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt: string;
 }

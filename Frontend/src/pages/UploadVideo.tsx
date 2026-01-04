@@ -55,135 +55,170 @@ const UploadVideo = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-gray-700/50">
-          <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Upload Video
-          </h1>
+    <div className="min-h-screen bg-[#0f172a] text-slate-200 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+            <Upload className="w-6 h-6 text-red-500" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+              Upload Video
+            </h1>
+            <p className="text-slate-500 font-bold mt-1 uppercase tracking-widest text-[10px]">
+              Share your content with the world
+            </p>
+          </div>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Video File <span className="text-red-500">*</span>
-              </label>
-              <div className="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-red-500 transition-colors">
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                  id="video-upload"
-                />
-                <label htmlFor="video-upload" className="cursor-pointer">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  {videoFile ? (
-                    <p className="text-white">{videoFile.name}</p>
+        <div className="glass rounded-[2.5rem] p-10 border border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/5 blur-[120px] -mr-48 -mt-48"></div>
+          
+          <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Video Upload */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                  Video File <span className="text-red-500">*</span>
+                </label>
+                <div className="relative group h-64">
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                    id="video-upload"
+                  />
+                  <label
+                    htmlFor="video-upload"
+                    className={`flex flex-col items-center justify-center h-full rounded-[2.5rem] border-2 border-dashed transition-all duration-500 cursor-pointer ${
+                      videoFile 
+                        ? "border-red-500/50 bg-red-500/5" 
+                        : "border-white/10 bg-white/5 hover:border-red-500/30 hover:bg-white/10"
+                    }`}
+                  >
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-500 ${
+                      videoFile ? "bg-red-500 text-white" : "bg-white/5 text-slate-500 group-hover:scale-110"
+                    }`}>
+                      <Upload className="w-8 h-8" />
+                    </div>
+                    {videoFile ? (
+                      <div className="text-center px-6">
+                        <p className="text-white font-bold truncate max-w-[200px]">{videoFile.name}</p>
+                        <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-2">Click to change</p>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <p className="text-white font-black uppercase tracking-widest text-xs">Select Video</p>
+                        <p className="text-slate-500 text-[10px] font-bold mt-1">MP4, WebM, or OGG</p>
+                      </div>
+                    )}
+                  </label>
+                </div>
+              </div>
+
+              {/* Thumbnail Upload */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                  Thumbnail <span className="text-red-500">*</span>
+                </label>
+                <div className="relative group h-64">
+                  {thumbnailPreview ? (
+                    <div className="relative h-full rounded-[2.5rem] overflow-hidden group">
+                      <img
+                        src={thumbnailPreview}
+                        alt="Thumbnail preview"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-sm">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setThumbnail(null);
+                            setThumbnailPreview("");
+                          }}
+                          className="w-12 h-12 bg-red-600 text-white rounded-2xl flex items-center justify-center hover:bg-red-500 transition-all shadow-xl shadow-red-500/20"
+                          aria-label="Remove thumbnail"
+                        >
+                          <X className="w-6 h-6" />
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <>
-                      <p className="text-gray-300 mb-2">
-                        Click to upload video
-                      </p>
-                      <p className="text-sm text-gray-400">MP4, WebM, or OGG</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleThumbnailChange}
+                        className="hidden"
+                        id="thumbnail-upload"
+                      />
+                      <label
+                        htmlFor="thumbnail-upload"
+                        className="flex flex-col items-center justify-center h-full rounded-[2.5rem] border-2 border-dashed border-white/10 bg-white/5 hover:border-red-500/30 hover:bg-white/10 transition-all duration-500 cursor-pointer"
+                      >
+                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-4 text-slate-500 group-hover:scale-110 transition-all duration-500">
+                          <Upload className="w-8 h-8" />
+                        </div>
+                        <div className="text-center">
+                          <p className="text-white font-black uppercase tracking-widest text-xs">Select Thumbnail</p>
+                          <p className="text-slate-500 text-[10px] font-bold mt-1">JPG, PNG, or WebP</p>
+                        </div>
+                      </label>
                     </>
                   )}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                  Video Title <span className="text-red-500">*</span>
                 </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all font-medium"
+                  placeholder="Enter a catchy title"
+                />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Thumbnail <span className="text-red-500">*</span>
-              </label>
-              <div className="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-red-500 transition-colors">
-                {thumbnailPreview ? (
-                  <div className="relative">
-                    <img
-                      src={thumbnailPreview}
-                      alt="Thumbnail preview"
-                      className="max-h-48 mx-auto rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setThumbnail(null);
-                        setThumbnailPreview("");
-                      }}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleThumbnailChange}
-                      className="hidden"
-                      id="thumbnail-upload"
-                    />
-                    <label
-                      htmlFor="thumbnail-upload"
-                      className="cursor-pointer"
-                    >
-                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-300 mb-2">
-                        Click to upload thumbnail
-                      </p>
-                      <p className="text-sm text-gray-400">JPG, PNG, or WebP</p>
-                    </label>
-                  </>
-                )}
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  required
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  rows={5}
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all font-medium resize-none"
+                  placeholder="Tell viewers about your video"
+                />
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="Enter video title"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                required
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                rows={5}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="Enter video description"
-              />
             </div>
 
             <button
               type="submit"
               disabled={uploadMutation.isPending}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full py-5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-[2rem] hover:from-red-600 hover:to-orange-600 disabled:opacity-50 transition-all duration-300 font-black uppercase tracking-widest text-sm shadow-xl shadow-red-500/20 active:scale-[0.98] flex items-center justify-center gap-3"
             >
               {uploadMutation.isPending ? (
                 <>
-                  <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
-                  Uploading...
+                  <Loader2 className="animate-spin h-5 w-5" />
+                  Uploading Content...
                 </>
               ) : (
                 <>
-                  <Upload className="w-5 h-5 mr-2" />
-                  Upload Video
+                  <Upload className="w-5 h-5" />
+                  Publish Video
                 </>
               )}
             </button>

@@ -145,325 +145,354 @@ const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-          Settings
-        </h1>
+    <div className="min-h-screen bg-[#0f172a] text-slate-200">
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex items-center gap-6 mb-12">
+          <div className="w-16 h-16 bg-red-600/10 rounded-3xl flex items-center justify-center border border-red-500/20">
+            <User className="w-8 h-8 text-red-500" />
+          </div>
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+              Settings
+            </h1>
+            <p className="text-slate-500 font-bold mt-2 uppercase tracking-widest text-[10px]">
+              Manage your account and preferences
+            </p>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 space-y-2 border border-gray-700/50 shadow-xl">
+            <div className="glass rounded-[2rem] p-4 space-y-2 border border-white/5 shadow-2xl sticky top-24">
               <button
                 onClick={() => setActiveTab("profile")}
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center space-x-3 ${
+                className={`w-full text-left px-6 py-4 rounded-2xl transition-all duration-500 flex items-center gap-4 group ${
                   activeTab === "profile"
-                    ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/40 transform scale-105"
-                    : "text-gray-400 hover:bg-gray-700/50 hover:text-white"
+                    ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-xl shadow-red-500/20"
+                    : "text-slate-500 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                <User className="w-5 h-5" />
-                <span>Profile</span>
+                <User
+                  className={`w-5 h-5 transition-transform duration-500 ${
+                    activeTab === "profile"
+                      ? "scale-110"
+                      : "group-hover:scale-110"
+                  }`}
+                />
+                <span className="font-black uppercase tracking-widest text-[10px]">
+                  Profile
+                </span>
               </button>
               <button
                 onClick={() => setActiveTab("password")}
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center space-x-3 ${
+                className={`w-full text-left px-6 py-4 rounded-2xl transition-all duration-500 flex items-center gap-4 group ${
                   activeTab === "password"
-                    ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/40 transform scale-105"
-                    : "text-gray-400 hover:bg-gray-700/50 hover:text-white"
+                    ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-xl shadow-red-500/20"
+                    : "text-slate-500 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                <Lock className="w-5 h-5" />
-                <span>Password</span>
+                <Lock
+                  className={`w-5 h-5 transition-transform duration-500 ${
+                    activeTab === "password"
+                      ? "scale-110"
+                      : "group-hover:scale-110"
+                  }`}
+                />
+                <span className="font-black uppercase tracking-widest text-[10px]">
+                  Password
+                </span>
               </button>
               <button
                 onClick={() => setActiveTab("danger")}
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center space-x-3 ${
+                className={`w-full text-left px-6 py-4 rounded-2xl transition-all duration-500 flex items-center gap-4 group ${
                   activeTab === "danger"
-                    ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/40 transform scale-105"
-                    : "text-gray-400 hover:bg-gray-700/50 hover:text-white"
+                    ? "bg-red-600 text-white shadow-xl shadow-red-500/20"
+                    : "text-slate-500 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                <AlertTriangle className="w-5 h-5" />
-                <span>Danger Zone</span>
+                <AlertTriangle
+                  className={`w-5 h-5 transition-transform duration-500 ${
+                    activeTab === "danger"
+                      ? "scale-110"
+                      : "group-hover:scale-110"
+                  }`}
+                />
+                <span className="font-black uppercase tracking-widest text-[10px]">
+                  Danger Zone
+                </span>
               </button>
             </div>
           </div>
 
           <div className="lg:col-span-3">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 shadow-xl">
+            <div className="glass rounded-[2.5rem] p-10 border border-white/5 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-red-500/5 blur-[120px] -mr-48 -mt-48"></div>
+
               {activeTab === "profile" && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold mb-6">Profile Settings</h2>
-
+                <div className="space-y-10 relative z-10">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-4">
-                      Profile Picture
-                    </label>
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={user?.avatar}
-                        alt={user?.fullName}
-                        className="w-24 h-24 rounded-full object-cover ring-4 ring-red-500/30 shadow-xl hover:ring-red-500/50 transition-all"
-                      />
-                      <label className="cursor-pointer px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-600 text-white rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 flex items-center shadow-lg hover:shadow-red-500/30 transform hover:-translate-y-0.5 font-semibold">
-                        <Upload className="w-4 h-4 mr-2" />
-                        {updateAvatarMutation.isPending
-                          ? "Uploading..."
-                          : "Change Avatar"}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleAvatarChange}
-                          className="hidden"
-                          disabled={updateAvatarMutation.isPending}
-                        />
-                      </label>
-                    </div>
+                    <h2 className="text-3xl font-black text-white tracking-tight mb-2">
+                      Profile Settings
+                    </h2>
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                      Update your personal information
+                    </p>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-4">
-                      Cover Image
-                    </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    {/* Avatar Upload */}
                     <div className="space-y-4">
-                      {user?.coverImage && (
-                        <img
-                          src={user.coverImage}
-                          alt="Cover"
-                          className="w-full h-48 object-cover rounded-2xl border-2 border-gray-700/50 shadow-xl hover:border-red-500/30 transition-all"
-                        />
-                      )}
-                      <label className="cursor-pointer px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-600 text-white rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-red-500/30 transform hover:-translate-y-0.5 font-semibold">
-                        <Upload className="w-4 h-4 mr-2" />
-                        {updateCoverMutation.isPending
-                          ? "Uploading..."
-                          : "Change Cover"}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleCoverChange}
-                          className="hidden"
-                          disabled={updateCoverMutation.isPending}
-                        />
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                        Profile Picture
                       </label>
+                      <div className="relative group w-40 h-40">
+                        <img
+                          src={user?.avatar}
+                          alt={user?.fullName}
+                          className="w-full h-full rounded-[2.5rem] object-cover ring-8 ring-white/5 shadow-2xl group-hover:ring-red-500/20 transition-all duration-500"
+                        />
+                        <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-[2.5rem] cursor-pointer backdrop-blur-sm">
+                          <Upload className="w-8 h-8 text-white" />
+                          <input
+                            type="file"
+                            className="hidden"
+                            onChange={handleAvatarChange}
+                            accept="image/*"
+                            aria-label="Upload profile picture"
+                          />
+                        </label>
+                        {updateAvatarMutation.isPending && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-[2.5rem] backdrop-blur-sm">
+                            <Loader2 className="w-8 h-8 text-white animate-spin" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Cover Upload */}
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                        Cover Image
+                      </label>
+                      <div className="relative group h-40 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
+                        <img
+                          src={
+                            user?.coverImage ||
+                            "https://images.unsplash.com/photo-1579546929518-9e396f3cc809"
+                          }
+                          alt="Cover"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 cursor-pointer backdrop-blur-sm">
+                          <Upload className="w-8 h-8 text-white" />
+                          <input
+                            type="file"
+                            className="hidden"
+                            onChange={handleCoverChange}
+                            accept="image/*"
+                            aria-label="Upload cover image"
+                          />
+                        </label>
+                        {updateCoverMutation.isPending && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                            <Loader2 className="w-8 h-8 text-white animate-spin" />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <form onSubmit={handleProfileSubmit} className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Full Name
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
-                          type="text"
-                          value={profileData.fullName}
-                          onChange={(e) =>
-                            setProfileData({
-                              ...profileData,
-                              fullName: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-3 bg-gray-700/50 backdrop-blur-sm border-2 border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                        />
+                  <form onSubmit={handleProfileSubmit} className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                          Full Name
+                        </label>
+                        <div className="relative">
+                          <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                          <input
+                            type="text"
+                            value={profileData.fullName}
+                            onChange={(e) =>
+                              setProfileData({
+                                ...profileData,
+                                fullName: e.target.value,
+                              })
+                            }
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                            placeholder="Enter your full name"
+                            aria-label="Full name"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                          Email Address
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                          <input
+                            type="email"
+                            value={profileData.email}
+                            onChange={(e) =>
+                              setProfileData({
+                                ...profileData,
+                                email: e.target.value,
+                              })
+                            }
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                            placeholder="Enter your email address"
+                            aria-label="Email address"
+                          />
+                        </div>
                       </div>
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
-                          type="email"
-                          value={profileData.email}
-                          onChange={(e) =>
-                            setProfileData({
-                              ...profileData,
-                              email: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-3 bg-gray-700/50 backdrop-blur-sm border-2 border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                        />
-                      </div>
-                    </div>
-
                     <button
                       type="submit"
                       disabled={updateProfileMutation.isPending}
-                      className="w-full py-3 px-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-xl hover:shadow-red-500/50 transform hover:-translate-y-1 font-bold text-lg"
+                      className="px-10 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl hover:from-red-600 hover:to-orange-600 disabled:opacity-50 transition-all duration-300 font-black uppercase tracking-widest text-xs shadow-xl shadow-red-500/20 active:scale-95 flex items-center gap-3"
                     >
-                      {updateProfileMutation.isPending ? (
-                        <>
-                          <Loader2 className="animate-spin mr-2 h-5 w-5" />
-                          Updating...
-                        </>
-                      ) : (
-                        "Save Changes"
+                      {updateProfileMutation.isPending && (
+                        <Loader2 className="w-4 h-4 animate-spin" />
                       )}
+                      Save Changes
                     </button>
                   </form>
                 </div>
               )}
 
               {activeTab === "password" && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold mb-6">Change Password</h2>
+                <div className="space-y-10 relative z-10">
+                  <div>
+                    <h2 className="text-3xl font-black text-white tracking-tight mb-2">
+                      Security
+                    </h2>
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                      Update your password
+                    </p>
+                  </div>
 
-                  <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Current Password
-                      </label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
-                          type="password"
-                          value={passwordData.oldPassword}
-                          onChange={(e) =>
-                            setPasswordData({
-                              ...passwordData,
-                              oldPassword: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-3 bg-gray-700/50 backdrop-blur-sm border-2 border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                          required
-                        />
+                  <form
+                    onSubmit={handlePasswordSubmit}
+                    className="space-y-8 max-w-xl"
+                  >
+                    <div className="space-y-6">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                          Current Password
+                        </label>
+                        <div className="relative">
+                          <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                          <input
+                            type="password"
+                            value={passwordData.oldPassword}
+                            onChange={(e) =>
+                              setPasswordData({
+                                ...passwordData,
+                                oldPassword: e.target.value,
+                              })
+                            }
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                            placeholder="Enter current password"
+                            aria-label="Current password"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                          New Password
+                        </label>
+                        <div className="relative">
+                          <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                          <input
+                            type="password"
+                            value={passwordData.newPassword}
+                            onChange={(e) =>
+                              setPasswordData({
+                                ...passwordData,
+                                newPassword: e.target.value,
+                              })
+                            }
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                            placeholder="Enter new password"
+                            aria-label="New password"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                          Confirm New Password
+                        </label>
+                        <div className="relative">
+                          <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                          <input
+                            type="password"
+                            value={passwordData.confirmPassword}
+                            onChange={(e) =>
+                              setPasswordData({
+                                ...passwordData,
+                                confirmPassword: e.target.value,
+                              })
+                            }
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                            placeholder="Confirm new password"
+                            aria-label="Confirm new password"
+                            required
+                          />
+                        </div>
                       </div>
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        New Password
-                      </label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
-                          type="password"
-                          value={passwordData.newPassword}
-                          onChange={(e) =>
-                            setPasswordData({
-                              ...passwordData,
-                              newPassword: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-3 bg-gray-700/50 backdrop-blur-sm border-2 border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Confirm New Password
-                      </label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
-                          type="password"
-                          value={passwordData.confirmPassword}
-                          onChange={(e) =>
-                            setPasswordData({
-                              ...passwordData,
-                              confirmPassword: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-3 bg-gray-700/50 backdrop-blur-sm border-2 border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                          required
-                        />
-                      </div>
-                    </div>
-
                     <button
                       type="submit"
                       disabled={changePasswordMutation.isPending}
-                      className="w-full py-3 px-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-xl hover:shadow-red-500/50 transform hover:-translate-y-1 font-bold text-lg"
+                      className="px-10 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl hover:from-red-600 hover:to-orange-600 disabled:opacity-50 transition-all duration-300 font-black uppercase tracking-widest text-xs shadow-xl shadow-red-500/20 active:scale-95 flex items-center gap-3"
                     >
-                      {changePasswordMutation.isPending ? (
-                        <>
-                          <Loader2 className="animate-spin mr-2 h-5 w-5" />
-                          Changing...
-                        </>
-                      ) : (
-                        "Change Password"
+                      {changePasswordMutation.isPending && (
+                        <Loader2 className="w-4 h-4 animate-spin" />
                       )}
+                      Update Password
                     </button>
                   </form>
                 </div>
               )}
 
               {activeTab === "danger" && (
-                <div className="bg-gray-800 rounded-xl p-6">
-                  <div className="flex items-center mb-6">
-                    <AlertTriangle className="w-6 h-6 text-red-500 mr-3" />
-                    <h2 className="text-xl font-semibold text-red-500">
+                <div className="space-y-10 relative z-10">
+                  <div>
+                    <h2 className="text-3xl font-black text-white tracking-tight mb-2">
                       Danger Zone
                     </h2>
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                      Irreversible account actions
+                    </p>
                   </div>
 
-                  <div className="bg-red-900 bg-opacity-20 border border-red-500 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-red-400 mb-2">
-                      Delete Account
-                    </h3>
-                    <p className="text-gray-300 mb-4">
-                      Once you delete your account, there is no going back. This
-                      will permanently delete:
-                    </p>
-                    <ul className="list-disc list-inside text-gray-400 mb-6 space-y-1">
-                      <li>All your videos and thumbnails</li>
-                      <li>All your comments</li>
-                      <li>All your likes and playlists</li>
-                      <li>All your tweets</li>
-                      <li>All your subscriptions</li>
-                      <li>Your profile and account data</li>
-                    </ul>
-
-                    {!showDeleteConfirm ? (
-                      <button
-                        onClick={() => setShowDeleteConfirm(true)}
-                        className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center"
-                      >
-                        <Trash2 className="w-5 h-5 mr-2" />
-                        Delete My Account
-                      </button>
-                    ) : (
-                      <div className="space-y-4">
-                        <p className="text-yellow-400 font-semibold flex items-center">
-                          <AlertTriangle className="w-5 h-5 mr-2" />
-                          Are you absolutely sure?
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={handleDeleteAccount}
-                            disabled={deleteAccountMutation.isPending}
-                            className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center"
-                          >
-                            {deleteAccountMutation.isPending ? (
-                              <>
-                                <Loader2 className="animate-spin mr-2 h-5 w-5" />
-                                Deleting...
-                              </>
-                            ) : (
-                              <>
-                                <Trash2 className="w-5 h-5 mr-2" />
-                                Yes, Delete Forever
-                              </>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => setShowDeleteConfirm(false)}
-                            disabled={deleteAccountMutation.isPending}
-                            className="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
-                          >
-                            Cancel
-                          </button>
-                        </div>
+                  <div className="p-8 rounded-[2rem] bg-red-500/5 border border-red-500/20 space-y-6">
+                    <div className="flex items-start gap-6">
+                      <div className="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20 flex-shrink-0">
+                        <AlertTriangle className="w-7 h-7 text-red-500" />
                       </div>
-                    )}
+                      <div>
+                        <h3 className="text-xl font-black text-white mb-2">
+                          Delete Account
+                        </h3>
+                        <p className="text-slate-400 font-medium leading-relaxed">
+                          Once you delete your account, there is no going back.
+                          All your videos, comments, likes, and playlists will
+                          be permanently removed from our servers.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="px-10 py-4 bg-red-600 text-white rounded-2xl hover:bg-red-500 transition-all duration-300 font-black uppercase tracking-widest text-xs shadow-xl shadow-red-500/20 active:scale-95 flex items-center gap-3"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete My Account
+                    </button>
                   </div>
                 </div>
               )}
@@ -471,6 +500,45 @@ const Settings = () => {
           </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-[#0f172a]/80 backdrop-blur-xl"
+            onClick={() => setShowDeleteConfirm(false)}
+          ></div>
+          <div className="glass relative w-full max-w-md rounded-[2.5rem] p-10 border border-white/10 shadow-2xl animate-scale-in">
+            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center border border-red-500/20 mx-auto mb-8">
+              <AlertTriangle className="w-10 h-10 text-red-500" />
+            </div>
+            <h3 className="text-2xl font-black text-white text-center mb-4">
+              Are you absolutely sure?
+            </h3>
+            <p className="text-slate-400 text-center font-medium leading-relaxed mb-10">
+              This action is permanent and cannot be undone. You will lose
+              access to all your content immediately.
+            </p>
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleteAccountMutation.isPending}
+                className="w-full py-4 bg-red-600 text-white rounded-2xl hover:bg-red-500 transition-all font-black uppercase tracking-widest text-xs shadow-xl shadow-red-500/20 active:scale-95 flex items-center justify-center gap-3"
+              >
+                {deleteAccountMutation.isPending && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
+                Yes, Delete Everything
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="w-full py-4 bg-white/5 text-white rounded-2xl hover:bg-white/10 transition-all font-black uppercase tracking-widest text-xs border border-white/10"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

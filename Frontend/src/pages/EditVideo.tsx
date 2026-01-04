@@ -88,117 +88,142 @@ const EditVideo = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+        <div className="relative">
+          <div className="w-20 h-20 border-2 border-blue-500/20 rounded-full"></div>
+          <div className="w-20 h-20 border-t-2 border-blue-500 rounded-full animate-spin absolute top-0 left-0"></div>
+        </div>
       </div>
     );
   }
 
   if (!videoDetails) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-400">Video not found</p>
+      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-20 h-20 bg-slate-800 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/5">
+            <X className="w-10 h-10 text-slate-500" />
+          </div>
+          <p className="text-slate-400 font-black uppercase tracking-widest text-xs">Video not found</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Edit Video
-          </h1>
+    <div className="min-h-screen bg-[#0f172a] text-slate-200 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-6 mb-12">
+          <div className="w-16 h-16 bg-blue-600/10 rounded-3xl flex items-center justify-center border border-blue-500/20">
+            <Upload className="w-8 h-8 text-blue-500" />
+          </div>
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+              Edit Video
+            </h1>
+            <p className="text-slate-500 font-bold mt-2 uppercase tracking-widest text-[10px]">
+              Update your content details
+            </p>
+          </div>
+        </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 shadow-xl"
-          >
-            \n
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium mb-2">
-                Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="Enter video title"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium mb-2"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={6}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
-                placeholder="Enter video description"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Thumbnail (Optional)
-              </label>
-              <div className="flex flex-col space-y-4">
-                {thumbnailPreview && (
-                  <div className="relative w-full max-w-md">
+        <div className="glass rounded-[2.5rem] p-10 border border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 blur-[120px] -mr-48 -mt-48"></div>
+          
+          <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              {/* Left Side: Inputs */}
+              <div className="space-y-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                    Video Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                    placeholder="Enter video title"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                    Description <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    required
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={8}
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium resize-none"
+                    placeholder="Enter video description"
+                  />
+                </div>
+              </div>
+
+              {/* Right Side: Thumbnail */}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">
+                  Thumbnail (Optional)
+                </label>
+                <div className="relative group h-full min-h-[300px]">
+                  <div className="relative h-full rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl group">
                     <img
                       src={thumbnailPreview}
                       alt="Thumbnail preview"
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    {thumbnail && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setThumbnail(null);
-                          setThumbnailPreview(videoDetails.thumbnail);
-                        }}
-                        className="absolute top-2 right-2 p-1 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    )}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center backdrop-blur-sm">
+                      <label className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/20 cursor-pointer mb-4">
+                        <Upload className="w-8 h-8" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleThumbnailChange}
+                          className="hidden"
+                          aria-label="Upload new thumbnail"
+                        />
+                      </label>
+                      <p className="text-white font-black uppercase tracking-widest text-[10px]">Change Thumbnail</p>
+                      {thumbnail && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setThumbnail(null);
+                            setThumbnailPreview(videoDetails.thumbnail);
+                          }}
+                          className="mt-4 text-red-500 font-black uppercase tracking-widest text-[10px] hover:text-red-400 transition-colors"
+                        >
+                          Reset to Original
+                        </button>
+                      )}
+                    </div>
                   </div>
-                )}
-                <label className="inline-flex items-center px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors">
-                  <Upload className="w-5 h-5 mr-2" />
-                  <span>Change Thumbnail</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleThumbnailChange}
-                    className="hidden"
-                  />
-                </label>
-                <p className="text-sm text-gray-400">
-                  Recommended: 1280x720 pixels, max 2MB
-                </p>
+                </div>
               </div>
             </div>
-            <div className="flex space-x-4">
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-6">
               <button
                 type="submit"
                 disabled={updateVideoMutation.isPending}
-                className="flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="flex-1 py-5 bg-blue-600 text-white rounded-[2rem] hover:bg-blue-500 disabled:opacity-50 transition-all duration-300 font-black uppercase tracking-widest text-sm shadow-xl shadow-blue-500/20 active:scale-[0.98] flex items-center justify-center gap-3"
               >
-                {updateVideoMutation.isPending ? "Updating..." : "Update Video"}
+                {updateVideoMutation.isPending ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    Updating...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => navigate(`/video/${videoId}`)}
-                className="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium"
+                className="flex-1 py-5 bg-white/5 text-white rounded-[2rem] hover:bg-white/10 transition-all duration-300 font-black uppercase tracking-widest text-sm border border-white/10 active:scale-[0.98]"
               >
                 Cancel
               </button>

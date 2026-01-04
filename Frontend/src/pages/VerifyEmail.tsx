@@ -62,40 +62,59 @@ const VerifyEmail = () => {
   }, [token, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-red-900 to-orange-900">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-2xl shadow-2xl text-center">
+    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] p-4">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full"></div>
+      </div>
+
+      <div className="w-full max-w-md glass rounded-[2.5rem] p-10 border border-white/10 shadow-2xl text-center relative z-10 animate-scale-in">
         {status === "loading" && (
-          <>
-            <Loader2 className="w-16 h-16 text-red-500 animate-spin mx-auto" />
-            <h2 className="text-2xl font-bold text-white">
-              Verifying your email...
+          <div className="space-y-6">
+            <div className="w-20 h-20 bg-blue-600/10 rounded-3xl flex items-center justify-center border border-blue-500/20 mx-auto">
+              <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+            </div>
+            <h2 className="text-3xl font-black text-white tracking-tight">
+              Verifying...
             </h2>
-          </>
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+              Securing your account
+            </p>
+          </div>
         )}
 
         {status === "success" && (
-          <>
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-white">Email Verified!</h2>
-            <p className="text-gray-300">{message}</p>
-            <p className="text-sm text-gray-400">Redirecting to login...</p>
-          </>
+          <div className="space-y-6">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center border border-emerald-500/20 mx-auto">
+              <CheckCircle className="w-10 h-10 text-emerald-500" />
+            </div>
+            <h2 className="text-3xl font-black text-white tracking-tight">Email Verified!</h2>
+            <p className="text-slate-400 font-medium leading-relaxed">{message}</p>
+            <div className="pt-4">
+              <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-500 animate-[progress_3s_ease-in-out]"></div>
+              </div>
+              <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-4">Redirecting to login</p>
+            </div>
+          </div>
         )}
 
         {status === "error" && (
-          <>
-            <XCircle className="w-16 h-16 text-red-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-white">
-              Verification Failed
+          <div className="space-y-6">
+            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center border border-red-500/20 mx-auto">
+              <XCircle className="w-10 h-10 text-red-500" />
+            </div>
+            <h2 className="text-3xl font-black text-white tracking-tight">
+              Failed
             </h2>
-            <p className="text-gray-300">{message}</p>
+            <p className="text-slate-400 font-medium leading-relaxed">{message}</p>
             <button
               onClick={() => navigate("/login")}
-              className="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              className="w-full py-4 bg-blue-600 text-white rounded-2xl hover:bg-blue-500 transition-all font-black uppercase tracking-widest text-[10px] shadow-xl shadow-blue-900/20 active:scale-95"
             >
-              Go to Login
+              Back to Login
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>

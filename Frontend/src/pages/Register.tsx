@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../api/auth";
-import { Loader2, Upload, Mail, CheckCircle } from "lucide-react";
+import { Loader2, Upload, Mail, CheckCircle, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import logo from "../assets/logo.png";
 
@@ -16,6 +16,7 @@ const Register = () => {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
   const [coverPreview, setCoverPreview] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
@@ -197,15 +198,28 @@ const Register = () => {
               <label className="block text-sm font-medium text-gray-300">
                 Password
               </label>
-              <input
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                placeholder="••••••••"
-              />
+              <div className="relative mt-1">
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="block w-full px-3 py-2 pr-10 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-300"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
               {fieldErrors.password && (
                 <p className="mt-1 text-sm text-red-400">
                   {fieldErrors.password}

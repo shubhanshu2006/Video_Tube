@@ -18,6 +18,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import VideoPlayer from "./pages/VideoPlayer";
 import UploadVideo from "./pages/UploadVideo";
 import EditVideo from "./pages/EditVideo";
@@ -56,6 +58,14 @@ function AppRoutes() {
         element={isAuthenticated ? <Navigate to="/" /> : <Register />}
       />
       <Route path="/verify-email/:token" element={<VerifyEmail />} />
+      <Route
+        path="/forgot-password"
+        element={isAuthenticated ? <Navigate to="/" /> : <ForgotPassword />}
+      />
+      <Route
+        path="/reset-password/:token"
+        element={isAuthenticated ? <Navigate to="/" /> : <ResetPassword />}
+      />
 
       <Route element={<Layout />}>
         <Route

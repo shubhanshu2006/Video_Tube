@@ -517,6 +517,7 @@ const VideoPlayer = () => {
                         value={commentText}
                         onChange={(e) => setCommentText(e.target.value)}
                         placeholder="Add a comment..."
+                        aria-label="Add a comment"
                         className="w-full px-4 py-3 bg-gray-800/50 backdrop-blur-sm border-2 border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                       />
                       <div className="flex justify-end mt-2">
@@ -601,6 +602,7 @@ const VideoPlayer = () => {
                                 onChange={(e) =>
                                   setEditingCommentContent(e.target.value)
                                 }
+                                aria-label="Edit comment"
                                 className="w-full px-4 py-3 bg-gray-800/50 backdrop-blur-sm border-2 border-gray-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                                 autoFocus
                               />

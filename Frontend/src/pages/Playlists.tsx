@@ -85,40 +85,51 @@ const Playlists = () => {
   const playlists = data?.data || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            My Playlists
-          </h1>
+    <div className="min-h-screen bg-[#0f172a] text-slate-200">
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+              My Playlists
+            </h1>
+            <p className="text-slate-500 font-bold mt-2 uppercase tracking-widest text-[10px]">
+              Organize and manage your video collections
+            </p>
+          </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 flex items-center shadow-lg hover:shadow-red-500/30 transform hover:-translate-y-0.5"
+            className="px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:from-red-600 hover:to-orange-600 transition-all duration-300 shadow-lg shadow-red-900/20 flex items-center justify-center gap-3 group"
           >
-            <Plus className="w-5 h-5 mr-2" />
+            <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Create Playlist
           </button>
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="animate-pulse bg-gray-800 rounded-xl p-6 h-48"
+                className="glass rounded-3xl p-6 h-64 animate-pulse border border-white/5"
               ></div>
             ))}
           </div>
         ) : playlists.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <PlaySquare className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-xl">No playlists yet</p>
-            <p className="text-sm mt-2">
-              Create your first playlist to organize your videos!
-            </p>
+          <div className="text-center py-24 glass rounded-[3rem] border border-white/5">
+            <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
+              <PlaySquare className="w-10 h-10 text-slate-700" />
+            </div>
+            <h3 className="text-xl font-black text-white mb-2 tracking-tighter">No playlists yet</h3>
+            <p className="text-slate-500 font-medium mb-8">Create your first playlist to organize your videos!</p>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:from-red-600 hover:to-orange-600 transition-all duration-500 shadow-lg shadow-red-900/20"
+            >
+              Create Now
+            </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {playlists.map(
               (playlist: {
                 _id: string;
@@ -128,46 +139,51 @@ const Playlists = () => {
               }) => (
                 <div
                   key={playlist._id}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 shadow-xl hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 group"
+                  className="glass rounded-[2.5rem] overflow-hidden border border-white/5 group hover:border-red-500/30 transition-all duration-500 shadow-2xl"
                 >
-                  <div className="relative h-48 bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
+                  <div className="relative aspect-video overflow-hidden">
                     {playlist.videos?.[0]?.thumbnail ? (
                       <img
                         src={playlist.videos[0].thumbnail}
                         alt={playlist.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                     ) : (
-                      <PlaySquare className="w-16 h-16 text-white opacity-50" />
+                      <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+                        <PlaySquare className="w-16 h-16 text-slate-800" />
+                      </div>
                     )}
-                    <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 px-2 py-1 rounded text-xs">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                    <div className="absolute bottom-4 right-4 glass px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white border border-white/10">
                       {playlist.videos?.length || 0} videos
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold mb-2">
+                  <div className="p-8">
+                    <h3 className="text-xl font-black text-white mb-2 line-clamp-1 group-hover:text-red-400 transition-colors tracking-tight">
                       {playlist.name}
                     </h3>
-                    <p className="text-gray-400 text-sm line-clamp-2 mb-4">
+                    <p className="text-slate-400 text-sm font-medium line-clamp-2 mb-8 h-10 leading-relaxed">
                       {playlist.description}
                     </p>
-                    <div className="flex space-x-2">
+                    <div className="flex gap-3">
                       <Link
                         to={`/playlist/${playlist._id}`}
-                        className="flex-1 px-3 py-2 bg-red-500 rounded hover:bg-red-600 transition-colors flex items-center justify-center"
+                        className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-900/20 hover:from-red-600 hover:to-orange-600"
                       >
-                        <Eye className="w-4 h-4 mr-2" />
+                        <Eye className="w-4 h-4" />
                         View
                       </Link>
                       <button
                         onClick={() => handleEdit(playlist)}
-                        className="px-3 py-2 bg-gray-700 rounded hover:bg-gray-600 transition-colors flex items-center justify-center"
+                        className="p-3 glass text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-white/5"
+                        title="Edit Playlist"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => deleteMutation.mutate(playlist._id)}
-                        className="px-3 py-2 bg-red-600 rounded hover:bg-red-700 transition-colors"
+                        className="p-3 glass text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-white/5"
+                        title="Delete Playlist"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -179,89 +195,39 @@ const Playlists = () => {
           </div>
         )}
 
-        {showCreateModal && (
-          <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800/95 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-gray-700/50 shadow-2xl">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                  Create Playlist
-                </h2>
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="text-gray-400 hover:text-white"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
+        
+        {(showCreateModal || showEditModal) && (
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-center z-50 p-4 animate-fade-in">
+            <div className="glass rounded-[2.5rem] p-10 max-w-md w-full border border-white/10 shadow-2xl animate-scale-in relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] -mr-32 -mt-32"></div>
+              
+              <div className="flex justify-between items-center mb-8 relative z-10">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Playlist name"
-                  />
+                  <h2 className="text-2xl font-black text-white tracking-tight">
+                    {showEditModal ? "Edit Playlist" : "Create Playlist"}
+                  </h2>
+                  <p className="text-slate-500 font-bold mt-1 uppercase tracking-widest text-[10px]">
+                    {showEditModal ? "Update your collection details" : "Start a new video collection"}
+                  </p>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    required
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    rows={4}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Describe your playlist"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={createMutation.isPending}
-                  className="w-full py-3 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {createMutation.isPending ? "Creating..." : "Create Playlist"}
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {showEditModal && (
-          <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800/95 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-gray-700/50 shadow-2xl">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                  Edit Playlist
-                </h2>
                 <button
                   onClick={() => {
+                    setShowCreateModal(false);
                     setShowEditModal(false);
                     setEditingPlaylist(null);
                     setFormData({ name: "", description: "" });
                   }}
-                  className="text-gray-400 hover:text-white"
+                  className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-400 hover:text-white"
+                  aria-label="Close dialog"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Name
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                    Playlist Name
                   </label>
                   <input
                     type="text"
@@ -270,13 +236,13 @@ const Playlists = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Playlist name"
+                    className="w-full px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:bg-white/10 transition-all font-medium"
+                    placeholder="Enter a catchy name"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
                     Description
                   </label>
                   <textarea
@@ -286,17 +252,19 @@ const Playlists = () => {
                       setFormData({ ...formData, description: e.target.value })
                     }
                     rows={4}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    placeholder="Describe your playlist"
+                    className="w-full px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:bg-white/10 transition-all font-medium resize-none"
+                    placeholder="What's this playlist about?"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  disabled={updateMutation.isPending}
-                  className="w-full py-3 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="w-full py-5 px-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:from-red-600 hover:to-orange-600 transition-all duration-300 shadow-xl shadow-red-900/20 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                 >
-                  {updateMutation.isPending ? "Updating..." : "Update Playlist"}
+                  {createMutation.isPending || updateMutation.isPending 
+                    ? "Processing..." 
+                    : showEditModal ? "Update Playlist" : "Create Playlist"}
                 </button>
               </form>
             </div>

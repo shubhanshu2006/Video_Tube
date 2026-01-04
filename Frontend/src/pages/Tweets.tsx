@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { tweetApi } from "../api/tweet";
 import { likeApi } from "../api/like";
 import { useAuth } from "../hooks/useAuth";
-import { MessageSquare, Heart, Trash2, Edit2, Send, X } from "lucide-react";
+import { MessageSquare, Heart, Trash2, Edit2, Send, Share2, MessageCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Tweet {
@@ -101,62 +101,59 @@ const CommunityPosts = () => {
     }
   };
 
-  const handleUpdateTweet = (tweetId: string) => {
-    if (editContent.trim()) {
-      updateMutation.mutate({ tweetId, content: editContent.trim() });
-    }
-  };
-
-  const handleDeleteTweet = (tweetId: string) => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      deleteMutation.mutate(tweetId);
-    }
-  };
-
-  const startEditing = (tweet: Tweet) => {
-    setEditingTweetId(tweet._id);
-    setEditContent(tweet.content);
-  };
-
-  const cancelEditing = () => {
-    setEditingTweetId(null);
-    setEditContent("");
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+        <div className="relative w-24 h-24">
+          <div className="absolute inset-0 border-4 border-red-500/20 rounded-full"></div>
+          <div className="absolute inset-0 border-4 border-red-600 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800">
+    <div className="min-h-screen bg-[#0f172a] text-slate-200">
       <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-          Community Posts
-        </h1>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-600/10 rounded-full border border-red-500/20">
+              <MessageCircle className="w-3.5 h-3.5 text-red-500" />
+              <span className="text-[9px] font-black text-red-500 uppercase tracking-[0.2em]">Community</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+              Tweets
+            </h1>
+            <p className="text-slate-500 font-medium text-xs max-w-md">
+              Share your thoughts, updates, and connect with your audience through short posts.
+            </p>
+          </div>
+        </div>
 
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-gray-700/50 shadow-xl">
-          <div className="flex items-start space-x-4">
+        {/* Create Tweet */}
+        <div className="glass rounded-2xl p-6 mb-8 border border-white/5 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[80px] -mr-32 -mt-32"></div>
+          <div className="flex gap-4 relative z-10">
             <img
-              src={user?.avatar || "/default-avatar.png"}
+              src={user?.avatar}
               alt={user?.fullName}
-              className="w-12 h-12 rounded-full ring-2 ring-red-500/20"
+              className="w-12 h-12 rounded-xl object-cover ring-2 ring-white/5"
             />
-            <div className="flex-1">
+            <div className="flex-1 space-y-4">
               <textarea
                 value={newTweet}
                 onChange={(e) => setNewTweet(e.target.value)}
-                placeholder="Share your thoughts..."
-                maxLength={280}
-                className="w-full bg-gray-700 text-white rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
-                rows={3}
+                placeholder="What's on your mind?"
+                className="w-full bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all resize-none min-h-[120px]"
               />
-              <div className="flex justify-between items-center mt-3">
-                <span className="text-sm text-gray-400">
-                  {newTweet.length}/280
-                </span>
+              <div className="flex justify-end">
                 <button
                   onClick={handleCreateTweet}
                   disabled={!newTweet.trim() || createMutation.isPending}
-                  className="px-6 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full hover:from-red-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-semibold flex items-center shadow-lg hover:shadow-red-500/30 transform hover:-translate-y-0.5"
+                  className="px-10 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:from-red-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-xl shadow-red-500/20 flex items-center gap-3"
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Tweet
+                  {createMutation.isPending ? "Posting..." : "Post Tweet"}
+                  <Send className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -164,65 +161,61 @@ const CommunityPosts = () => {
         </div>
 
         {/* Tweets List */}
-        {isLoading ? (
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-gray-800 rounded-xl p-6 animate-pulse">
-                <div className="flex space-x-4">
-                  <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
-                  <div className="flex-1 space-y-3">
-                    <div className="h-4 bg-gray-700 rounded w-1/4"></div>
-                    <div className="h-4 bg-gray-700 rounded"></div>
-                    <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-                  </div>
-                </div>
+        <div className="space-y-6">
+          {tweets.length === 0 ? (
+            <div className="text-center py-32 glass rounded-[3rem] border border-white/5">
+              <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8">
+                <MessageSquare className="w-12 h-12 text-slate-700" />
               </div>
-            ))}
-          </div>
-        ) : tweets.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <MessageSquare className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-xl">No posts yet</p>
-            <p className="text-sm mt-2">
-              Share your thoughts with the community!
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {tweets.map((tweet) => (
+              <h3 className="text-2xl font-black text-white tracking-tight mb-2">No posts yet</h3>
+              <p className="text-slate-500 text-sm">Be the first to share something with the community!</p>
+            </div>
+          ) : (
+            tweets.map((tweet) => (
               <div
                 key={tweet._id}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 shadow-xl hover:shadow-2xl hover:border-gray-600/50 transition-all duration-300"
+                className="glass rounded-[2.5rem] p-8 border border-white/5 hover:border-red-500/30 transition-all duration-500 relative overflow-hidden group"
               >
-                <div className="flex items-start space-x-4">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-red-600/5 blur-[60px] -mr-24 -mt-24 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="flex gap-6 relative z-10">
                   <img
                     src={tweet.owner.avatar}
                     alt={tweet.owner.fullName}
-                    className="w-12 h-12 rounded-full ring-2 ring-red-500/20"
+                    className="w-14 h-14 rounded-2xl object-cover ring-4 ring-white/5"
                   />
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-4">
                       <div>
-                        <h3 className="text-white font-semibold">
+                        <h3 className="text-lg font-black text-white tracking-tight leading-none mb-1">
                           {tweet.owner.fullName}
                         </h3>
-                        <p className="text-gray-400 text-sm">
-                          @{tweet.owner.username} ·{" "}
-                          {formatDate(tweet.createdAt)}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-500 font-black text-[10px] uppercase tracking-widest">@{tweet.owner.username}</span>
+                          <span className="text-slate-600 text-[10px] font-black">•</span>
+                          <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">{formatDate(tweet.createdAt)}</span>
+                        </div>
                       </div>
+                      
                       {user?._id === tweet.owner._id && (
-                        <div className="flex space-x-2">
+                        <div className="flex items-center gap-2">
                           <button
-                            onClick={() => startEditing(tweet)}
-                            className="text-gray-400 hover:text-blue-400 transition-colors"
+                            onClick={() => {
+                              setEditingTweetId(tweet._id);
+                              setEditContent(tweet.content);
+                            }}
+                            className="p-2.5 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+                            aria-label="Edit post"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDeleteTweet(tweet._id)}
-                            className="text-gray-400 hover:text-red-400 transition-colors"
-                          >
+                            onClick={() => {
+                              if (window.confirm("Delete this post?")) {
+                                deleteMutation.mutate(tweet._id);
+                              }
+                            }}
+                            className="p-2.5 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"                            aria-label="Delete post"                          >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
@@ -230,56 +223,70 @@ const CommunityPosts = () => {
                     </div>
 
                     {editingTweetId === tweet._id ? (
-                      <div className="mt-3">
+                      <div className="space-y-4">
                         <textarea
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
-                          maxLength={280}
-                          className="w-full bg-gray-700 text-white rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
+                          className="w-full bg-slate-900/50 border border-red-500/30 rounded-2xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all resize-none"
                           rows={3}
+                          placeholder="Edit your post..."
+                          aria-label="Edit post content"
                         />
-                        <div className="flex justify-between items-center mt-2">
-                          <span className="text-sm text-gray-400">
-                            {editContent.length}/280
-                          </span>
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={cancelEditing}
-                              className="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-500 transition-colors"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleUpdateTweet(tweet._id)}
-                              disabled={!editContent.trim()}
-                              className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                              Save
-                            </button>
-                          </div>
+                        <div className="flex justify-end gap-3">
+                          <button
+                            onClick={() => setEditingTweetId(null)}
+                            className="px-6 py-2.5 bg-white/5 text-slate-400 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition-all"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() =>
+                              updateMutation.mutate({
+                                tweetId: tweet._id,
+                                content: editContent,
+                              })
+                            }
+                            disabled={!editContent.trim() || updateMutation.isPending}
+                            className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:from-red-600 hover:to-orange-600 transition-all shadow-lg shadow-red-500/20"
+                          >
+                            Save Changes
+                          </button>
                         </div>
                       </div>
                     ) : (
-                      <p className="text-white whitespace-pre-wrap">
+                      <p className="text-slate-300 text-base leading-relaxed mb-6 whitespace-pre-wrap">
                         {tweet.content}
                       </p>
                     )}
 
-                    <div className="flex items-center space-x-6 mt-4 text-gray-400">
+                    <div className="flex items-center gap-8 pt-4 border-t border-white/5">
                       <button
                         onClick={() => toggleLikeMutation.mutate(tweet._id)}
-                        className="flex items-center space-x-2 hover:text-red-400 transition-colors"
+                        className="flex items-center gap-2.5 group/like"
                       >
-                        <Heart className="w-5 h-5" />
-                        <span>{tweet.likesCount || 0}</span>
+                        <div className="p-2 rounded-xl bg-white/5 group-hover/like:bg-red-500/10 transition-all">
+                          <Heart className={`w-4 h-4 transition-all ${tweet.likesCount ? "fill-red-500 text-red-500" : "text-slate-500 group-hover/like:text-red-500"}`} />
+                        </div>
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${tweet.likesCount ? "text-red-500" : "text-slate-500 group-hover/like:text-red-500"}`}>
+                          {tweet.likesCount || 0} Likes
+                        </span>
+                      </button>
+                      
+                      <button className="flex items-center gap-2.5 group/share">
+                        <div className="p-2 rounded-xl bg-white/5 group-hover/share:bg-blue-500/10 transition-all">
+                          <Share2 className="w-4 h-4 text-slate-500 group-hover/share:text-blue-500" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover/share:text-blue-500">
+                          Share
+                        </span>
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

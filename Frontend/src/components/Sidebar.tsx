@@ -18,24 +18,13 @@ const Sidebar = () => {
   const { isAuthenticated, user } = useAuth();
   const location = useLocation();
 
-  const { data: subscribedChannelsData, isLoading: isLoadingSubscriptions } =
-    useQuery({
+  const { data: subscribedChannelsData } = useQuery({
       queryKey: ["subscribedChannels", user?._id],
       queryFn: () => subscriptionApi.getSubscribedChannels(user!._id),
       enabled: !!user?._id && isAuthenticated,
     });
 
   const subscribedChannels = subscribedChannelsData?.data || [];
-
-  // Debug logging
-  console.log("Sidebar Debug:", {
-    isAuthenticated,
-    userId: user?._id,
-    isLoadingSubscriptions,
-    subscribedChannelsData,
-    subscribedChannels,
-    channelsCount: subscribedChannels.length,
-  });
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -69,7 +58,7 @@ const Sidebar = () => {
               to={link.path}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive(link.path)
-                  ? "bg-red-500 text-white"
+                  ? "bg-gradient-to-r from-red-500 to-orange-500 text-white"
                   : "text-gray-300 hover:bg-gray-700"
               }`}
             >
@@ -89,7 +78,7 @@ const Sidebar = () => {
                   to={link.path}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                     isActive(link.path)
-                      ? "bg-red-500 text-white"
+                      ? "bg-gradient-to-r from-red-500 to-orange-500 text-white"
                       : "text-gray-300 hover:bg-gray-700"
                   }`}
                 >

@@ -3,24 +3,29 @@ import bcrypt from "bcrypt";
 
 import crypto from "crypto";
 
-const pendingUserSchema = new Schema({
-  fullName: String,
-  email: { type: String, unique: true },
-  username: { type: String, unique: true },
-  password: String,
-  avatar: String,
-  avatarPublicId: String,
-  coverImage: {
-    type: String,
-    default: "",
+const pendingUserSchema = new Schema(
+  {
+    fullName: String,
+    email: { type: String, unique: true },
+    username: { type: String, unique: true },
+    password: String,
+    avatar: String,
+    avatarPublicId: String,
+    coverImage: {
+      type: String,
+      default: "",
+    },
+    coverImagePublicId: {
+      type: String,
+      default: "",
+    },
+    verificationToken: String,
+    verificationTokenExpiry: Date,
   },
-  coverImagePublicId: {
-    type: String,
-    default: "",
-  },
-  verificationToken: String,
-  verificationTokenExpiry: Date,
-});
+  { timestamps: true }
+);
+
+pendingUserSchema.index({ createdAt: 1 }, { expireAfterSeconds: 24 * 60 * 60 });
 
 pendingUserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return;

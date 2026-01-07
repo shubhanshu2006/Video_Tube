@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./hooks/useAuth";
 import { Toaster } from "react-hot-toast";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Layout
 import Layout from "./components/Layout";
@@ -205,6 +206,9 @@ function App() {
       <Router>
         <AuthProvider>
           <AppRoutes />
+
+          <SpeedInsights />
+
           <Toaster
             position="top-right"
             toastOptions={{

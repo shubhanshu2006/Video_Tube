@@ -292,8 +292,8 @@ const VideoPlayer = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
           <div className="lg:col-span-2">
             <div className="bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-gray-700/50">
               <video
@@ -306,33 +306,34 @@ const VideoPlayer = () => {
               />
             </div>
 
-            <div className="mt-6 p-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-xl">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            <div className="mt-4 sm:mt-6 p-3 sm:p-6 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-xl">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 {video.title}
               </h1>
 
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center text-gray-400 text-sm">
-                  <Eye className="w-4 h-4 mr-2" />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-4">
+                <div className="flex items-center text-gray-400 text-xs sm:text-sm">
+                  <Eye className="w-4 h-4 mr-1 sm:mr-2" />
                   <span>{formatViews(video.views)} views</span>
-                  <span className="mx-2">•</span>
-                  <Clock className="w-4 h-4 mr-2" />
-                  <span>{formatDate(video.createdAt)}</span>
+                  <span className="mx-1 sm:mx-2">•</span>
+                  <Clock className="w-4 h-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">{formatDate(video.createdAt)}</span>
+                  <span className="sm:hidden">{new Date(video.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-2 sm:space-x-4 flex-wrap">
                   {user && (
                     <button
                       onClick={() => likeMutation.mutate()}
                       disabled={likeMutation.isPending}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 shadow-lg transform hover:-translate-y-0.5 ${
+                      className={`flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-full transition-all duration-300 shadow-lg transform hover:-translate-y-0.5 text-sm sm:text-base ${
                         video.isLiked
                           ? "bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 hover:shadow-red-500/30"
                           : "bg-gray-800 text-white hover:bg-gray-700 hover:shadow-gray-500/30"
                       }`}
                     >
                       <ThumbsUp
-                        className={`w-5 h-5 ${
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${
                           video.isLiked ? "fill-current" : ""
                         }`}
                       />
@@ -341,8 +342,8 @@ const VideoPlayer = () => {
                   )}
 
                   {!user && (
-                    <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800 rounded-full">
-                      <ThumbsUp className="w-5 h-5" />
+                    <div className="flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-gray-800 rounded-full text-sm sm:text-base">
+                      <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
                       <span>{video.likesCount || 0}</span>
                     </div>
                   )}
@@ -350,10 +351,10 @@ const VideoPlayer = () => {
                   <div className="relative">
                     <button
                       onClick={handleShare}
-                      className="share-button flex items-center space-x-2 px-4 py-2 bg-gray-800 rounded-full hover:bg-gray-700 hover:shadow-lg hover:shadow-gray-500/30 transition-all duration-300 transform hover:-translate-y-0.5"
+                      className="share-button flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-gray-800 rounded-full hover:bg-gray-700 hover:shadow-lg hover:shadow-gray-500/30 transition-all duration-300 transform hover:-translate-y-0.5 text-sm sm:text-base"
                     >
-                      <Share2 className="w-5 h-5" />
-                      <span>Share</span>
+                      <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="hidden sm:inline">Share</span>
                     </button>
 
                     {showShareMenu && (
@@ -398,10 +399,10 @@ const VideoPlayer = () => {
                     <div className="relative">
                       <button
                         onClick={() => setShowPlaylistMenu(!showPlaylistMenu)}
-                        className="playlist-button flex items-center space-x-2 px-4 py-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors"
+                        className="playlist-button flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors text-sm sm:text-base"
                       >
-                        <ListPlus className="w-5 h-5" />
-                        <span>Save</span>
+                        <ListPlus className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">Save</span>
                       </button>
 
                       {showPlaylistMenu && (
@@ -451,7 +452,7 @@ const VideoPlayer = () => {
               </div>
 
               {video.owner && (
-                <div className="flex items-center justify-between mt-6 p-4 bg-gray-800 rounded-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-800 rounded-xl gap-3 sm:gap-0">
                   <Link
                     to={`/channel/${video.owner.username}`}
                     className="flex items-center flex-1 hover:opacity-80 transition-opacity cursor-pointer"
@@ -459,13 +460,13 @@ const VideoPlayer = () => {
                     <img
                       src={video.owner.avatar}
                       alt={video.owner.fullName}
-                      className="w-12 h-12 rounded-full mr-4"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full mr-3 sm:mr-4"
                     />
                     <div>
-                      <h3 className="font-semibold text-white hover:text-red-400 transition-colors">
+                      <h3 className="font-semibold text-sm sm:text-base text-white hover:text-red-400 transition-colors">
                         {video.owner.fullName}
                       </h3>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-xs sm:text-sm text-gray-400">
                         @{video.owner.username}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
@@ -477,7 +478,7 @@ const VideoPlayer = () => {
                     <button
                       onClick={() => subscribeMutation.mutate(video.owner!._id)}
                       disabled={subscribeMutation.isPending}
-                      className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 shadow-lg transform hover:-translate-y-0.5 ${
+                      className={`px-4 sm:px-6 py-2 rounded-full font-semibold transition-all duration-300 shadow-lg transform hover:-translate-y-0.5 text-sm sm:text-base w-full sm:w-auto ${
                         video.isSubscribed
                           ? "bg-gray-700 text-white hover:bg-gray-600 hover:shadow-gray-500/30"
                           : "bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 hover:shadow-red-500/30"
@@ -489,27 +490,27 @@ const VideoPlayer = () => {
                 </div>
               )}
 
-              <div className="mt-6 p-4 bg-gray-800 rounded-xl">
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-gray-300 whitespace-pre-wrap">
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-800 rounded-xl">
+                <h3 className="font-semibold mb-2 text-sm sm:text-base">Description</h3>
+                <p className="text-gray-300 whitespace-pre-wrap text-sm sm:text-base">
                   {video.description}
                 </p>
               </div>
 
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-4">
+              <div className="mt-6 sm:mt-8">
+                <h3 className="text-lg sm:text-xl font-semibold mb-4">
                   Comments ({comments.length})
                 </h3>
 
                 {user && (
                   <form
                     onSubmit={handleComment}
-                    className="flex items-start space-x-4 mb-6"
+                    className="flex items-start space-x-2 sm:space-x-4 mb-6"
                   >
                     <img
                       src={user.avatar}
                       alt={user.fullName}
-                      className="w-10 h-10 rounded-full ring-2 ring-red-500/20"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full ring-2 ring-red-500/20 flex-shrink-0"
                     />
                     <div className="flex-1">
                       <input
@@ -518,7 +519,7 @@ const VideoPlayer = () => {
                         onChange={(e) => setCommentText(e.target.value)}
                         placeholder="Add a comment..."
                         aria-label="Add a comment"
-                        className="w-full px-4 py-3 bg-gray-800/50 backdrop-blur-sm border-2 border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800/50 backdrop-blur-sm border-2 border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all text-sm sm:text-base"
                       />
                       <div className="flex justify-end mt-2">
                         <button
@@ -526,9 +527,9 @@ const VideoPlayer = () => {
                           disabled={
                             !commentText.trim() || commentMutation.isPending
                           }
-                          className="px-6 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-xl hover:shadow-red-500/50 transform hover:-translate-y-1 font-semibold"
+                          className="px-4 sm:px-6 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-xl hover:shadow-red-500/50 transform hover:-translate-y-1 font-semibold text-sm sm:text-base"
                         >
-                          <Send className="w-4 h-4 mr-2" />
+                          <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                           Comment
                         </button>
                       </div>
@@ -536,7 +537,7 @@ const VideoPlayer = () => {
                   </form>
                 )}
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {comments.map(
                     (comment: {
                       _id: string;
@@ -547,21 +548,21 @@ const VideoPlayer = () => {
                     }) => (
                       <div
                         key={comment._id}
-                        className="flex items-start space-x-4 p-4 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/30 hover:border-gray-600/50 hover:bg-gray-800/50 transition-all duration-300"
+                        className="flex items-start space-x-2 sm:space-x-4 p-3 sm:p-4 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/30 hover:border-gray-600/50 hover:bg-gray-800/50 transition-all duration-300"
                       >
                         <img
                           src={comment.owner.avatar}
                           alt={comment.owner.fullName}
-                          className="w-10 h-10 rounded-full ring-2 ring-red-500/20"
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full ring-2 ring-red-500/20 flex-shrink-0"
                         />
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <span className="font-semibold">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-1 sm:gap-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                              <span className="font-semibold text-sm sm:text-base">
                                 {comment.owner.fullName}
                               </span>
-                              <span className="text-sm text-gray-400">
-                                {formatDate(comment.createdAt)}
+                              <span className="text-xs sm:text-sm text-gray-400">
+                                {new Date(comment.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                               </span>
                             </div>
                             {user && user._id === comment.owner._id && (
@@ -629,7 +630,7 @@ const VideoPlayer = () => {
                             </div>
                           ) : (
                             <>
-                              <p className="mt-1 text-gray-300">
+                              <p className="mt-1 text-gray-300 text-sm sm:text-base break-words">
                                 {comment.content}
                               </p>
                               {user && (
@@ -637,9 +638,9 @@ const VideoPlayer = () => {
                                   onClick={() =>
                                     likeCommentMutation.mutate(comment._id)
                                   }
-                                  className="mt-2 flex items-center space-x-1 text-sm text-gray-400 hover:text-red-400 transition-colors"
+                                  className="mt-2 flex items-center space-x-1 text-xs sm:text-sm text-gray-400 hover:text-red-400 transition-colors"
                                 >
-                                  <ThumbsUp className="w-4 h-4" />
+                                  <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4" />
                                   <span>{comment.likesCount || 0}</span>
                                 </button>
                               )}
@@ -655,10 +656,10 @@ const VideoPlayer = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-semibold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
               Related Videos
             </h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
               {relatedVideos.length === 0 ? (
                 <p className="text-gray-400 text-sm">No related videos found</p>
               ) : (
@@ -675,33 +676,34 @@ const VideoPlayer = () => {
                     <Link
                       key={relatedVideo._id}
                       to={`/video/${relatedVideo._id}`}
-                      className="flex space-x-3 p-2 rounded-2xl bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 hover:bg-gray-800/60 hover:border-gray-600/50 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300 transform hover:-translate-y-1"
+                      className="flex space-x-2 sm:space-x-3 p-2 rounded-2xl bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 hover:bg-gray-800/60 hover:border-gray-600/50 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300 transform hover:-translate-y-1"
                     >
                       <div className="relative flex-shrink-0">
                         <img
                           src={relatedVideo.thumbnail}
                           alt={relatedVideo.title}
-                          className="w-40 h-24 object-cover rounded-xl"
+                          className="w-32 h-20 sm:w-40 sm:h-24 object-cover rounded-xl"
                         />
-                        <div className="absolute bottom-1 right-1 bg-black/90 backdrop-blur-sm px-2 py-0.5 rounded-lg text-xs text-white flex items-center font-semibold">
-                          <Clock className="w-3 h-3 mr-1" />
+                        <div className="absolute bottom-1 right-1 bg-black/90 backdrop-blur-sm px-1.5 py-0.5 rounded text-xs text-white flex items-center font-semibold">
+                          <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
                           {formatDuration(relatedVideo.duration)}
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-white line-clamp-2 mb-1 group-hover:text-red-400 transition-colors">
+                        <h4 className="text-xs sm:text-sm font-medium text-white line-clamp-2 mb-1 group-hover:text-red-400 transition-colors">
                           {relatedVideo.title}
                         </h4>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-400 truncate">
                           {relatedVideo.owner?.fullName || "Unknown"}
                         </p>
-                        <div className="flex items-center space-x-2 text-xs text-gray-400 mt-1">
+                        <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-gray-400 mt-1">
                           <span className="flex items-center">
-                            <Eye className="w-3 h-3 mr-1" />
+                            <Eye className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
                             {formatViews(relatedVideo.views)}
                           </span>
                           <span>•</span>
-                          <span>{formatDate(relatedVideo.createdAt)}</span>
+                          <span className="hidden sm:inline">{formatDate(relatedVideo.createdAt)}</span>
+                          <span className="sm:hidden">{new Date(relatedVideo.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                         </div>
                       </div>
                     </Link>

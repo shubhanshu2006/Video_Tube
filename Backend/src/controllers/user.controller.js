@@ -224,10 +224,13 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while logging in the user");
   }
 
+  const TEN_DAYS = 10 * 24 * 60 * 60 * 1000;
+
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    maxAge: TEN_DAYS,
   };
 
   return res
@@ -296,9 +299,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Refresh token is expired or used");
     }
 
+    const TEN_DAYS = 10 * 24 * 60 * 60 * 1000;
+
     const options = {
       httpOnly: true,
       secure: true,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: TEN_DAYS,
     };
 
     const { accessToken, newRefreshToken } =
@@ -720,7 +727,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  
   if (!user) {
     return res
       .status(200)
@@ -799,7 +805,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   user.password = await bcrypt.hash(password, 10);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpiry = undefined;
-  user.refreshToken = undefined; 
+  user.refreshToken = undefined;
 
   await user.save({ validateBeforeSave: false });
 
